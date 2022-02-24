@@ -1,0 +1,12 @@
+replicaCount: 3
+mongodb:
+  global:
+    storageClass: csi-cinder-sc-retain
+    imagePullSecrets:
+    - dockerhub
+  auth:
+    enabled: false
+mongo-express:
+  imagePullSecrets: [ name : "dockerhub" ]
+  mongodbEnableAdmin: true
+  mongodbServer: "sandbox-metadata-mongodb"
