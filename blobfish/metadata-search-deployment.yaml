@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metadata-search
+  name: metadata-search
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metadata-search
+  template:
+    metadata:
+      labels:
+        app: metadata-search
+    spec:
+      containers:
+      - env:
+        - name: METADATA_SEARCH_SERVICE_API_ROOT_PATH
+          value: /api/search
+        - name: METADATA_SEARCH_SERVICE_DB_NAME
+          value: metadata-db
+        - name: METADATA_SEARCH_SERVICE_DB_URL
+          value: mongodb://metadata-db-access-svc
+         #value: mongodb://metadata-db
+        - name: METADATA_SEARCH_SERVICE_HOST
+          value: 0.0.0.0
+        image: ghga/metadata-search-service:dev
+        name: metadata-search
+        ports:
+        - containerPort: 8080

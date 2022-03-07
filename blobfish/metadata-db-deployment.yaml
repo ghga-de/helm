@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metadata-db
+  name: metadata-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metadata-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: metadata-db
+    spec:
+      containers:
+      - image: mongo:4.4.6
+        name: metadata-db
+        volumeMounts:
+        - mountPath: /data/db
+          name: metadata-db-fs
+      volumes:
+      - name: metadata-db-fs
+        persistentVolumeClaim:
+          claimName: metadata-db-fs
