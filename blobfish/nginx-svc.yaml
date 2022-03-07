@@ -1,30 +1,10 @@
-# Please edit the object below. Lines beginning with a '#' will be ignored,
-# and an empty file will abort the edit. If an error occurs while saving this file will be
-# reopened with the relevant failures.
-#
 apiVersion: v1
 kind: Service
-metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"nginx"},"name":"nginxsvc","namespace":"default"},"spec":{"ports":[{"name":"http","port":80,"protocol":"TCP"},{"name":"https","port":443,"protocol":"TCP"}],"selector":{"app":"nginx"},"type":"NodePort"}}
-  creationTimestamp: "2022-02-14T22:35:41Z"
+metadata:  
   labels:
     app: nginx
-  name: nginxsvc
-  namespace: default
-  resourceVersion: "314070"
-  uid: ac53a0c3-bc5f-4a05-b3a8-ce4fadfdaa00
-spec:
-  clusterIP: 10.43.84.214
-  clusterIPs:
-  - 10.43.84.214
-  externalIPs:
-  - 193.196.29.123
-  externalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
+  name: nginxsvc 
+spec:  
   ports:
   - name: http
     nodePort: 31080
@@ -38,7 +18,6 @@ spec:
     targetPort: 443
   selector:
     app: nginx
-  sessionAffinity: None
   type: NodePort
 status:
   loadBalancer: {}
