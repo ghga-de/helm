@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metadata-repository
+  name: metadata-repository
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metadata-repository
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: metadata-repository
+    spec:
+      containers:
+      - args:
+        - |2
+
+          set -x
+          if [ "${METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL}" != "" ]; then
+            # Obtain the data to be imported
+            curl -Lo /tmp/data.zip "${METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL}"
+            mkdir /tmp/data /tmp/example_dir
+            cd /tmp/data
+            unzip /tmp/data.zip
+            find /tmp/data
+            pip install typer
+
+            # Clear the database
+            /service/scripts/delete_all_metadata_records.py \
+              --db-url "${METADATA_REPOSITORY_SERVICE_DB_URL}" \
+              --db-name "${METADATA_REPOSITORY_SERVICE_DB_NAME}"
+
+            # Convert the data to GHGA format
+            python scripts/transform_ega_to_ghga.py \
+              --output /tmp/example_dir \
+                            blobfish-transform.yml
+
+            # Populate the database
+            /service/scripts/populate_metadata_store.py --example-dir /tmp/example_dir \
+              --db-url "${METADATA_REPOSITORY_SERVICE_DB_URL}" \
+              --db-name "${METADATA_REPOSITORY_SERVICE_DB_NAME}"
+          fi
+
+          # Run the service
+          metadata-repository-service
+        command:
+        - bash
+        - -c
+        env:
+        - name: METADATA_REPOSITORY_SERVICE_API_ROOT_PATH
+          value: /api/repository
+        - name: METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL
+          value: http://10.133.255.214/data.zip
+        - name: METADATA_REPOSITORY_SERVICE_DB_NAME
+          value: metadata-db
+        - name: METADATA_REPOSITORY_SERVICE_DB_URL
+          value: mongodb://metadata-db-access-svc
+         #value: mongodb://metadata-db
+        - name: METADATA_REPOSITORY_SERVICE_HOST
+          value: 0.0.0.0
+        image: ghga/metadata-repository-service:dev
+        name: metadata-repository
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - mountPath: /dataimport
+            name: metadata-repository-pv
+      restartPolicy: Always
+      volumes:
+        - name: metadata-repository-pv
+          persistentVolumeClaim:
+            claimName: metadata-repository-pvc
