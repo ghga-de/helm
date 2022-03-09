@@ -5,7 +5,7 @@ metadata:
     app: metadata-repository-pvc
   name: metadata-repository-pvc
 spec:
-  storageClassName: manual
+  storageClassName: csi-sc-cinderplugin
   accessModes:
     - ReadWriteOnce
   resources:
