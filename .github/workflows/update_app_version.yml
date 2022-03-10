@@ -6,7 +6,7 @@ on:
   # curl -X POST https://api.github.com/repos/<name_of_account>/<name_of_repo>/dispatches \
   #  -H 'Accept: application/vnd.github.everest-preview+json' \
   #  -u ${{ secrets.ACCESS_TOKEN }} \ # access token needs to be of format: <username>:<personal_access_token>
-  #  --data '{"event_type": "new_app_version", "client_payload": { "app_name": "name_of_app", "new_image_tag": "new_image_tag", "branch": "branch_name" }}'
+  #  --data '{"event_type": "new_app_version", "client_payload": { "app_name": "name_of_app", "new_image_tag": "new_image_tag", "context": "branch_name" }}'
 
 jobs:
   updateVersion:
@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       APP_YAML: "./helm/${{ github.event.client_payload.app_name }}-deployment.yaml"
+      BRANCH_NAME: "${{ github.event.client_payload.context }}"
       NEW_TAG_NAME: "${{ github.event.client_payload.new_image_tag }}"
-      BRANCH_NAME: "${{ github.event.client_payload.branch_name }}"
     steps:
     - name: Check out code
       uses: actions/checkout@v2
