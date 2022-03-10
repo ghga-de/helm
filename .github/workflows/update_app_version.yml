@@ -13,7 +13,7 @@ jobs:
     if: github.event.action == 'new_app_version'
     runs-on: ubuntu-latest
     env:
-      APP_YAML: "./blobfish/${{ github.event.client_payload.app_name }}-deployment.yaml"
+      APP_YAML: "./helm/${{ github.event.client_payload.app_name }}-deployment.yaml"
       NEW_TAG_NAME: "${{ github.event.client_payload.new_image_tag }}"
       BRANCH_NAME: "${{ github.event.client_payload.branch_name }}"
     steps:
