@@ -13,12 +13,15 @@ on:
       new_image_tag:
         description: 'Image tag to deploy'
         required: true
+      context:
+        description: 'branch deploy'
+        required: true
 
   # Usage:
   # curl -X POST https://api.github.com/repos/<name_of_account>/<name_of_repo>/dispatches \
   #  -H 'Accept: application/vnd.github.everest-preview+json' \
   #  -u ${{ secrets.ACCESS_TOKEN }} \ # access token needs to be of format: <username>:<personal_access_token>
-  #  --data '{"event_type": "new_app_version", "client_payload": { "app_name": "name_of_app", "new_image_tag": "new_image_tag"}}'
+  #  --data '{"event_type": "new_app_version", "client_payload": { "app_name": "name_of_app", "new_image_tag": "new_image_tag", "context": "context"}}'
 
 jobs:
   context:
@@ -27,6 +30,7 @@ jobs:
     outputs:
       appname: ${{ steps.setappname.outputs.appname }}
       imagetag: ${{ steps.setimagetag.outputs.imagetag }}
+      context: ${{ steps.setcontext.outputs.context }}
     steps:
       - name: automated trigger
         id: automated_trigger
@@ -34,8 +38,10 @@ jobs:
         run: |
           echo "App to deploy : ${{ github.event.client_payload.app_name }}"
           echo "Image to deploy: ${{ github.event.client_payload.new_image_tag }}"
+          echo "Context: ${{ github.event.client_payload.context }}"
           echo "::set-output name=appname::${{ github.event.client_payload.app_name }}"
           echo "::set-output name=imagetag::${{ github.event.client_payload.new_image_tag }}"
+          echo "::set-output name=context::${{ github.event.client_payload.context }}"
 
       - name: Manual trigger
         id: manual_trigger
@@ -44,8 +50,10 @@ jobs:
           echo "${{ github.actor }} ran this workflow manually: ${{ github.event.inputs.manual_reason }}"
           echo "App to deploy: ${{ github.event.inputs.app_name }}"
           echo "Image to deploy: ${{ github.event.inputs.new_image_tag }}"
+          echo "Context: ${{ github.event.inputs.context }}"
           echo "::set-output name=appname::${{ github.event.inputs.app_name }}"
           echo "::set-output name=imagetag::${{ github.event.inputs.new_image_tag }}"
+          echo "::set-output name=context::${{ github.event.inputs.context }}"
 
       - name: App to deploy
         id: setappname
@@ -62,12 +70,20 @@ jobs:
           if [[ -n "${{ steps.manual_trigger.outputs.imagetag }}" ]]; then
             echo "::set-output name=imagetag::${{ steps.manual_trigger.outputs.imagetag }}"
           fi
+      - name: Context
+        id: setcontext
+        run: |
+          echo "::set-output name=context::${{ steps.automated_trigger.outputs.context }}"
+          if [[ -n "${{ steps.manual_trigger.outputs.context }}" ]]; then
+            echo "::set-output name=context::${{ steps.manual_trigger.outputs.context }}"
+          fi  
 
       - name: Display context and environment variables
         run: |
           echo "GitHub.event_name: ${{ github.event_name }}"        
           echo "App to deploy: ${{ steps.setappname.outputs.appname }}"
           echo "Image to deploy: ${{ steps.setimagetag.outputs.imagetag }}"
+          echo "Context: ${{ steps.setimagetag.outputs.context }}"
           echo "GitHub sha: ${{ github.sha }}"
           echo "Date: $(date '+%Y%m%d')"
           echo "Build date: $(date '+%Y-%m-%dT%H:%M:%S')"
@@ -81,6 +97,7 @@ jobs:
       APP_YAML: "./helm/${{ needs.context.outputs.appname }}-deployment.yaml"
       NEW_TAG_NAME: "${{ needs.context.outputs.imagetag }}"
       APP_NAME: "${{ needs.context.outputs.appname }}"
+      Context: "${{ needs.context.outputs.context }}"
     steps:
     - name: Check out code
       uses: actions/checkout@v2
@@ -93,5 +110,5 @@ jobs:
       uses: actions-js/push@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: main
+        branch: echo ${Context}
         message: 'update app version of chart ${{ needs.context.outputs.appname }} to ${{ needs.context.outputs.imagetag }}'
