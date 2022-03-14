@@ -14,7 +14,7 @@ on:
         description: 'Image tag to deploy'
         required: true
       context:
-        description: 'branch deploy'
+        description: 'Deployment environment'
         required: true
 
   # Usage:
@@ -110,5 +110,5 @@ jobs:
       uses: actions-js/push@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: echo ${Context}
-        message: 'update app version of chart ${{ needs.context.outputs.appname }} to ${{ needs.context.outputs.imagetag }}'
+        branch:  ${{ needs.context.outputs.context }}
+        message: 'update app version of chart ${{ needs.context.outputs.appname }} to ${{ needs.context.outputs.imagetag }} in env ${{ needs.context.outputs.context }} '
