@@ -1,52 +1,97 @@
-name: Update App Version of A Helm Chart
+name: Update App Version of A Deployment
+
 on:
   repository_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      manual_reason:
+        description: 'Reason: explain why this is triggered manually'
+        required: true
+      app_name:
+        description: 'name of the app to deploy'
+        required: true
+      new_image_tag:
+        description: 'Image tag to deploy'
+        required: true
 
   # Usage:
   # curl -X POST https://api.github.com/repos/<name_of_account>/<name_of_repo>/dispatches \
   #  -H 'Accept: application/vnd.github.everest-preview+json' \
   #  -u ${{ secrets.ACCESS_TOKEN }} \ # access token needs to be of format: <username>:<personal_access_token>
-  #  --data '{"event_type": "new_app_version", "client_payload": { "chart_name": "name_of_chart", "new_app_version": "new_app_version" }}'
+  #  --data '{"event_type": "new_app_version", "client_payload": { "app_name": "name_of_app", "new_image_tag": "new_image_tag"}}'
 
 jobs:
-  updateVersion:
-    if: github.event.action == 'new_app_version'
+  context:
+    name: Compute and display context information
     runs-on: ubuntu-latest
+    outputs:
+      appname: ${{ steps.setappname.outputs.appname }}
+      imagetag: ${{ steps.setimagetag.outputs.imagetag }}
+    steps:
+      - name: automated trigger
+        id: automated_trigger
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "App to deploy : ${{ github.event.client_payload.app_name }}"
+          echo "Image to deploy: ${{ github.event.client_payload.new_image_tag }}"
+          echo "::set-output name=appname::${{ github.event.client_payload.app_name }}"
+          echo "::set-output name=imagetag::${{ github.event.client_payload.new_image_tag }}"
+
+      - name: Manual trigger
+        id: manual_trigger
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "${{ github.actor }} ran this workflow manually: ${{ github.event.inputs.manual_reason }}"
+          echo "App to deploy: ${{ github.event.inputs.app_name }}"
+          echo "Image to deploy: ${{ github.event.inputs.new_image_tag }}"
+          echo "::set-output name=appname::${{ github.event.inputs.app_name }}"
+          echo "::set-output name=imagetag::${{ github.event.inputs.new_image_tag }}"
+
+      - name: App to deploy
+        id: setappname
+        run: |
+          echo "::set-output name=appname::${{ steps.automated_trigger.outputs.appname }}"
+          if [[ -n "${{ steps.manual_trigger.outputs.appname }}" ]]; then
+            echo "::set-output name=appname::${{ steps.manual_trigger.outputs.appname }}"
+          fi
+
+      - name: Image to deploy
+        id: setimagetag
+        run: |
+          echo "::set-output name=imagetag::${{ steps.automated_trigger.outputs.imagetag }}"
+          if [[ -n "${{ steps.manual_trigger.outputs.imagetag }}" ]]; then
+            echo "::set-output name=imagetag::${{ steps.manual_trigger.outputs.imagetag }}"
+          fi
+
+      - name: Display context and environment variables
+        run: |
+          echo "GitHub.event_name: ${{ github.event_name }}"        
+          echo "App to deploy: ${{ steps.setappname.outputs.appname }}"
+          echo "Image to deploy: ${{ steps.setimagetag.outputs.imagetag }}"
+          echo "GitHub sha: ${{ github.sha }}"
+          echo "Date: $(date '+%Y%m%d')"
+          echo "Build date: $(date '+%Y-%m-%dT%H:%M:%S')"
+          printenv
+  updateVersion:
+    #if: github.event.action == 'new_app_version'
+    name: Update the app
+    runs-on: ubuntu-latest
+    needs: [context]
     env:
-      CHART_YAML: "./${{ github.event.client_payload.chart_name }}/Chart.yaml"
-      NEW_APP_VERSION: "${{ github.event.client_payload.new_app_version }}"
+      APP_YAML: "./helm/${{ needs.context.outputs.appname }}-deployment.yaml"
+      NEW_TAG_NAME: "${{ needs.context.outputs.imagetag }}"
+      APP_NAME: "${{ needs.context.outputs.appname }}"
     steps:
     - name: Check out code
       uses: actions/checkout@v2
     
-    - name: Replace appVersion in Chart.yaml
-      run: |
-        sed -i \
-          "s/^appVersion:.*$/appVersion: \"${NEW_APP_VERSION}\"/" \
-          "${CHART_YAML}"
-
-    - name: Increment patch number of the chart version
-      run: |
-        MATCH_PATCH_REGEX='s/^\(version:\s[0-9]\.[0-9]\.\)\([0-9]*[^0-9]*\)$'
-
-        # extract the current patch number from the Chart.yaml
-        PATCH_NUMBER=$(
-          cat "${CHART_YAML}" |\
-          grep "version:" | \
-          sed -n "${MATCH_PATCH_REGEX}/\2/p"
-        )
-
-        # bump the patch number
-        PATCH_NUMBER_BUMPED=$((PATCH_NUMBER+1))
-
-        # update the patch number in the Chart.yaml
-        sed -i \
-          "${MATCH_PATCH_REGEX}/\1${PATCH_NUMBER_BUMPED}/" \
-          "${CHART_YAML}"
-          
+    - name: Replace image tag in deployment yaml
+      run: |        
+       echo ${NEW_TAG_NAME}
+       sed -i -e "s+image:.*$+image: ghga\/${APP_NAME}:${NEW_TAG_NAME}+g" "${APP_YAML}"   
     - name: Commit & Push changes
       uses: actions-js/push@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: main
-        message: 'update app version of chart \"${{ github.event.client_payload.chart_name }}\" to ${{ github.event.client_payload.new_app_version }}'
+        message: 'update app version of chart ${{ needs.context.outputs.appname }} to ${{ needs.context.outputs.imagetag }}'

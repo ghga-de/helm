@@ -2,30 +2,30 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: blobfish-ui
-  name: blobfish-ui
+    app: data-portal-ui
+  name: data-portal-ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blobfish-ui
+      app: data-portal-ui
   template:
     metadata:
       labels:
-        app: blobfish-ui
+        app: data-portal-ui
     spec:
       containers:
       - env:
-        - name: DATA_PORTAL_UI_V1_HOST
+        - name: DATA_PORTAL_UI_HOST
           value: 0.0.0.0
-        - name: DATA_PORTAL_UI_V1_PORT
+        - name: DATA_PORTAL_UI_PORT
           value: "8080"
-        - name: DATA_PORTAL_UI_V1_SVC_REPOSITORY_URL
+        - name: DATA_PORTAL_UI_SVC_REPOSITORY_URL
           value: /api/repository
-        - name: DATA_PORTAL_UI_V1_SVC_SEARCH_URL
+        - name: DATA_PORTAL_UI_SVC_SEARCH_URL
           value: /api/search
-        image: ghga/data-portal-ui:0.0.0-17-2cbede9-dev
-        name: blobfish-ui
+        image: ghga/data-portal-ui:0.0.0-22-392ee26-dev
+        name: data-portal-ui
         ports:
         - containerPort: 8080
       restartPolicy: Always

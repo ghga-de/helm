@@ -5,9 +5,9 @@ metadata:
     app: metadata-db-fs
   name: metadata-db-fs
 spec:
-  storageClassName: manual
+  storageClassName: csi-sc-cinderplugin
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 1Gi
