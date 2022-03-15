@@ -24,7 +24,7 @@ spec:
           value: /api/repository
         - name: DATA_PORTAL_UI_SVC_SEARCH_URL
           value: /api/search
-        image: ghga/data-portal-ui:0.0.0-38-d1e9506-dev
+        image: ghga/data-portal-ui:0.0.0-55-81f5545-dev
         name: data-portal-ui
         ports:
         - containerPort: 8080
