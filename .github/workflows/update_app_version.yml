@@ -102,7 +102,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
       with:
-       context: ${{ github.event.client_payload.context }}
+       ref: ${{ github.event.client_payload.context }}
     
     - name: Replace image tag in deployment yaml
       run: |        
