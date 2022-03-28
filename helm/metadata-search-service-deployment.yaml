@@ -25,7 +25,7 @@ spec:
          #value: mongodb://metadata-db
         - name: METADATA_SEARCH_SERVICE_HOST
           value: 0.0.0.0
-        image: ghga/metadata-search-service:0.0.0-15-52bb51c-dev
+        image: ghga/metadata-search-service:0.0.0-16-809ce60-dev
         name: metadata-search
         ports:
         - containerPort: 8080
