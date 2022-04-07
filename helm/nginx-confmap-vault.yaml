@@ -34,7 +34,15 @@ data:
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header Host $http_host;
         }
-
+        location  /api/files {
+            rewrite /api/repository/(.*) /$1  break;
+            proxy_pass         http://ghga-storage-io:80;
+            proxy_redirect     off;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Host $http_host;
+        }
+        
       #  location /data.zip {
       #      alias /var/www/data.zip;
       #      auth_basic "Please authenticate";
