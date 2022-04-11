@@ -45,7 +45,7 @@ data:
         }
         
         location  /ga4gh/drs/v1 {
-            rewrite /ga4gh/drs/v1(.*) /$1  break;
+            rewrite /drs3/(.*) /$1  break;
             proxy_pass         http://ghga-drs3:80;
             proxy_redirect     off;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
