@@ -44,7 +44,7 @@ data:
             proxy_set_header Host $http_host;
         }
         
-        location  /ga4gh/drs/v1 {
+        location  /drs3/ {
             rewrite /drs3/(.*) /$1  break;
             proxy_pass         http://ghga-drs3:80;
             proxy_redirect     off;
