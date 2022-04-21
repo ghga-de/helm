@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ucs
+data:
+  .ucs.yaml: |
+        api_root_path: /api/ucs
+        auto_reload: false
+        aws_config_ini: null
+        cors_allow_credentials: null
+        cors_allowed_headers: null
+        cors_allowed_methods: null
+        cors_allowed_origins: null
+        db_print_logs: false
+        docs_url: /docs
+        host: 0.0.0.0
+        log_level: info
+        openapi_url: /openapi.json
+        port: 8080
+        rabbitmq_host: rabbitmq
+        rabbitmq_port: 5672
+        s3_session_token: null
+        service_name: upload_controller_service
+        topic_new_study: new_study_created
+        topic_upload_received: file_upload_received
+        workers: 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ucs
+  labels:
+    app: ucs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ucs
+  template:
+    metadata:
+      name: ucs
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/tls-skip-verify: "true"
+        vault.hashicorp.com/agent-inject-secret-variables: 'secret/files/ucs'
+        vault.hashicorp.com/agent-inject-template-variables: |
+          {{ with secret "secret/files/ucs" -}}
+            export UCS_DB_URL="{{ .Data.db_url }}"
+          export UCS_S3_ACCESS_KEY_ID="{{ .Data.s3_access }}"
+          export UCS_S3_ENDPOINT_URL="{{ .Data.s3_url }}"
+          export UCS_S3_INBOX_BUCKET_ID="{{ .Data.s3_inbox_bucket }}"
+          export UCS_S3_SECRET_ACCESS_KEY="{{ .Data.s3_secret }}"
+          {{- end }}
+        vault.hashicorp.com/role: "files-secret-role"
+      labels:
+        app: ucs
+    spec:
+      serviceAccountName: ucs
+      containers:
+      - name: ucs
+        image: ghga/upload-controller-service:0.1.0-2-geb369f0-dev
+        command: ["bash"]
+        args: [ '-c', 'source /vault/secrets/variables && ucs run-api']
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: "/home/appuser"
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: ucs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghga-ucs
+  labels:
+    category: ghga-ucs
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: ucs
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ucs
+  labels:
+   app: ucs
