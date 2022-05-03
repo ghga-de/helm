@@ -18,6 +18,6 @@ spec:
     targetPort: 443
   selector:
     app: nginx-secret
-  type: NodePort
+  type: Loadbalancer
 status:
   loadBalancer: {}
