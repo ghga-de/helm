@@ -24,7 +24,7 @@ spec:
           export DRS3_S3_OUTBOX_BUCKET_ID="{{ .Data.s3_outbox_bucket }}"
           export DRS3_S3_SECRET_ACCESS_KEY="{{ .Data.s3_secret }}"
           {{- end }}
-        vault.hashicorp.com/role: "files-secret-role"
+        vault.hashicorp.com/role: "files-io-role"
       labels:
         app: drs3
     spec:
