@@ -13,13 +13,23 @@ spec:
     type: Recreate
   template:
     metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-init-first: "true"
+        vault.hashicorp.com/tls-skip-verify: "true"
+        vault.hashicorp.com/agent-inject-secret-variables: 'secret/mrs/data'
+        vault.hashicorp.com/agent-inject-template-variables: |
+          {{ with secret "secret/mrs/data" -}}
+          export METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL="{{ .Data.mrs_url }}"
+          {{- end }}
+        vault.hashicorp.com/role: "mrs-role"
       labels:
         app: metadata-repository
     spec:
+      serviceAccountName: mrs
       containers:
       - args:
         - |2
-
           set -x
           if [ "${METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL}" != "" ]; then
             # Obtain the data to be imported
@@ -29,33 +39,29 @@ spec:
             unzip /tmp/data.zip
             find /tmp/data
             pip install typer
-
             # Clear the database
             /service/scripts/delete_all_metadata_records.py \
               --db-url "${METADATA_REPOSITORY_SERVICE_DB_URL}" \
               --db-name "${METADATA_REPOSITORY_SERVICE_DB_NAME}"
-
             # Convert the data to GHGA format
             python scripts/transform_ega_to_ghga.py \
               --output /tmp/example_dir \
                             blobfish-transform.yml
-
             # Populate the database
             /service/scripts/populate_metadata_store.py --example-dir /tmp/example_dir \
               --db-url "${METADATA_REPOSITORY_SERVICE_DB_URL}" \
               --db-name "${METADATA_REPOSITORY_SERVICE_DB_NAME}"
           fi
-
           # Run the service
-          metadata-repository-service
+           source /vault/secrets/variables && metadata-repository-service
         command:
         - bash
         - -c
         env:
         - name: METADATA_REPOSITORY_SERVICE_API_ROOT_PATH
           value: /api/repository
-        - name: METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL
-          value: http://10.133.255.214/data.zip
+#        - name: METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL
+#          value: http://193.196.29.176/data.zip
         - name: METADATA_REPOSITORY_SERVICE_DB_NAME
           value: metadata-db
         - name: METADATA_REPOSITORY_SERVICE_DB_URL
@@ -75,3 +81,10 @@ spec:
         - name: metadata-repository-pv
           persistentVolumeClaim:
             claimName: metadata-repository-pvc
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mrs
+  labels:
+    app: metadata-repository
