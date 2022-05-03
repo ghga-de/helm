@@ -36,7 +36,7 @@ spec:
           {{- end }}
         vault.hashicorp.com/role: "nginx-role"
       labels:
-        app: nginx-secret
+        app: nginx
     spec:
       volumes:
       - name: configmap-volume
