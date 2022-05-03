@@ -1,40 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-secret
+  name: nginx
   labels:
-    app: nginx-secret
+    app: nginx
 spec:
   selector:
     matchLabels:
-      app: nginx-secret
+      app: nginx
   replicas: 1
   template:
     metadata:
       annotations:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/tls-skip-verify: "true"
-        vault.hashicorp.com/agent-inject-secret-cert: "secret/nginx-secret/"
+        vault.hashicorp.com/agent-inject-secret-cert: "secret/nginx/"
         vault.hashicorp.com/agent-inject-template-cert: |
-          {{- with secret "secret/nginx-secret/blob" -}}
+          {{- with secret "secret/nginx/blob" -}}
            {{ .Data.cert }}
           {{- end }}
-        vault.hashicorp.com/agent-inject-secret-blob: "secret/nginx-secret/"
+        vault.hashicorp.com/agent-inject-secret-blob: "secret/nginx/"
         vault.hashicorp.com/agent-inject-template-blob: |
-          {{- with secret "secret/nginx-secret/blob" -}}
+          {{- with secret "secret/nginx/blob" -}}
            {{ .Data.pass }}
           {{- end }}
-        vault.hashicorp.com/agent-inject-secret-key: "secret/nginx-secret/"
+        vault.hashicorp.com/agent-inject-secret-key: "secret/nginx/"
         vault.hashicorp.com/agent-inject-template-key: |
-          {{- with secret "secret/nginx-secret/blob" -}}
+          {{- with secret "secret/nginx/blob" -}}
            {{ .Data.key }}
           {{- end }}
-        vault.hashicorp.com/agent-inject-secret-ssl: "secret/nginx-secret/"
+        vault.hashicorp.com/agent-inject-secret-ssl: "secret/nginx/"
         vault.hashicorp.com/agent-inject-template-ssl: |
-          {{- with secret "secret/nginx-secret/blob" -}}
+          {{- with secret "secret/nginx/blob" -}}
            {{ .Data.sslparam }}
           {{- end }}
-        vault.hashicorp.com/role: "nginx-secret-role"
+        vault.hashicorp.com/role: "nginx-role"
       labels:
         app: nginx-secret
     spec:
@@ -42,7 +42,7 @@ spec:
       - name: configmap-volume
         configMap:
           name: nginxsecretconfigmap
-      serviceAccountName: nginx-secret
+      serviceAccountName: nginx
       containers:
       - name: nginxhttps
         image: nginx:1.20.2
@@ -56,6 +56,6 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: nginx-secret
+  name: nginx
   labels:
-    app: nginx-secret
+    app: nginx
