@@ -51,7 +51,7 @@ spec:
           export UCS_S3_INBOX_BUCKET_ID="{{ .Data.s3_inbox_bucket }}"
           export UCS_S3_SECRET_ACCESS_KEY="{{ .Data.s3_secret }}"
           {{- end }}
-        vault.hashicorp.com/role: "files-secret-role"
+        vault.hashicorp.com/role: "files-io-role"
       labels:
         app: ucs
     spec:
