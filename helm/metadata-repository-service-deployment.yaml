@@ -30,6 +30,7 @@ spec:
       containers:
       - args:
         - |2
+          source /vault/secrets/variables
           set -x
           if [ "${METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL}" != "" ]; then
             # Obtain the data to be imported
@@ -53,7 +54,7 @@ spec:
               --db-name "${METADATA_REPOSITORY_SERVICE_DB_NAME}"
           fi
           # Run the service
-           source /vault/secrets/variables && metadata-repository-service
+            metadata-repository-service
         command:
         - bash
         - -c
