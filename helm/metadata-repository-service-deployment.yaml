@@ -20,7 +20,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-variables: 'secret/mrs/data'
         vault.hashicorp.com/agent-inject-template-variables: |
           {{ with secret "secret/mrs/data" -}}
-          export METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL="{{ .Data.mrs_url }}"
+          export METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL={{ .Data.mrs_url }}
           {{- end }}
         vault.hashicorp.com/role: "mrs-role"
       labels:
