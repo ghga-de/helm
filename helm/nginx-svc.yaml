@@ -8,14 +8,14 @@ spec:
   ports:
   - name: http
     nodePort: 32070
-    port: 80
+    port: 8080
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   - name: https
     nodePort: 32080
-    port: 443
+    port: 8443
     protocol: TCP
-    targetPort: 443
+    targetPort: 8443
   selector:
     app: nginx
   type: LoadBalancer
