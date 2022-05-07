@@ -18,6 +18,6 @@ spec:
     targetPort: 8443
   selector:
     app: nginx
-  type: LoadBalancer
+  type: NodePort
 status:
   loadBalancer: {}
