@@ -88,7 +88,6 @@ data:
     cors_allowed_origins: []
     db_print_logs: false
     docs_url: /docs
-#    drs_self_url: drs://hd-dev.ghga-dev.de
     host: 0.0.0.0
     log_level: info
     openapi_url: /openapi.json
@@ -102,4 +101,3 @@ data:
     topic_name_file_staged: file_staged_for_download
     topic_name_stage_request: non_staged_file_requested
     workers: 1
-#    custom_spec_url: https://hd-dev.ghga-dev.de/api/drs3/ga4gh/drs/v1/openapi.yaml
