@@ -24,7 +24,7 @@ spec:
           export DRS3_S3_OUTBOX_BUCKET_ID="{{ .Data.s3_outbox_bucket }}"
           export DRS3_S3_SECRET_ACCESS_KEY="{{ .Data.s3_secret }}"
           export DRS3_DRS_SELF_URL="{{ .Data.drs_self_url }}"
-          export DRS_CUSTOM_SPEC_URL="{{ .Data.custom_spec_url }}"
+          export DRS3_CUSTOM_SPEC_URL="{{ .Data.custom_spec_url }}"
           {{- end }}
         vault.hashicorp.com/role: "files-io-role"
       labels:
