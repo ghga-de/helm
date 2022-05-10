@@ -3,8 +3,7 @@ data:
   default.conf: |
     server {
         server_name hd-dev.ghga-dev.de;
- #        auth_basic           "Please authenticate";
- #        auth_basic_user_file /vault/secrets/blob;
+
         client_max_body_size 4g;
 
         location / {
