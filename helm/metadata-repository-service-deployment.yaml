@@ -23,6 +23,7 @@ spec:
           export METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL={{ .Data.mrs_url }}
           {{- end }}
         vault.hashicorp.com/role: "mrs-role"
+        proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
       labels:
         app: metadata-repository
     spec:
