@@ -39,6 +39,7 @@ data:
             rewrite /api/ucs/(.*) /$1  break;
             proxy_pass         http://ghga-ucs:8080;
             proxy_redirect     off;
+            proxy_http_version 1.1
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header Host $http_host;
@@ -48,6 +49,7 @@ data:
             rewrite /api/drs3/(.*) /$1  break;
             proxy_pass         http://ghga-drs3:80;
             proxy_redirect     off;
+            proxy_http_version 1.1
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header Host $http_host;
