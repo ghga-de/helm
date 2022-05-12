@@ -29,6 +29,7 @@ spec:
         vault.hashicorp.com/role: "files-io-role"
       labels:
         app: drs3
+        version: 1-dev
     spec:
       serviceAccountName: drs3
       containers:
