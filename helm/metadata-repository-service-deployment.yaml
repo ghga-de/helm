@@ -26,6 +26,7 @@ spec:
         proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
       labels:
         app: metadata-repository
+        version: 1-dev
     spec:
       serviceAccountName: mrs
       containers:
