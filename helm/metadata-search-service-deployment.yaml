@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app: metadata-search
+        version: 1-dev
     spec:
       containers:
       - env:
