@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: metadata-db
+        version: 1-dev
     spec:
       containers:
       - image: mongo:4.4.6
