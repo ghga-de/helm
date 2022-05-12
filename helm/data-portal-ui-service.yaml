@@ -3,6 +3,7 @@ kind: Service
 metadata:
   labels:
     app: data-portal-ui
+    version: 1
   name: data-portal-ui
 spec:
   type: ClusterIP
