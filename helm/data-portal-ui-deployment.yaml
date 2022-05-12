@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: data-portal-ui
+        version: 1
     spec:
       containers:
       - env:
