@@ -54,6 +54,7 @@ spec:
         vault.hashicorp.com/role: "files-io-role"
       labels:
         app: ucs
+        version: 1-dev
     spec:
       serviceAccountName: ucs
       containers:
