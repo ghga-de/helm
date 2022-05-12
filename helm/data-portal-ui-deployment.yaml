@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   labels:
     app: data-portal-ui
-    version: 1
   name: data-portal-ui
 spec:
   replicas: 1
@@ -14,7 +13,6 @@ spec:
     metadata:
       labels:
         app: data-portal-ui
-        version: 1
     spec:
       containers:
       - env:
