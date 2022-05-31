@@ -22,7 +22,8 @@ spec:
         - name: METADATA_SEARCH_SERVICE_DB_NAME
           value: metadata-db
         - name: METADATA_SEARCH_SERVICE_DB_URL
-          value: mongodb://metadata-db-access-svc
+          value: mongodb://mongodb
+         #value: mongodb://metadata-db-access-svc
          #value: mongodb://metadata-db
         - name: METADATA_SEARCH_SERVICE_HOST
           value: 0.0.0.0
