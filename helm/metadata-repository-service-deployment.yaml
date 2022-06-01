@@ -41,7 +41,7 @@ spec:
           set -x
           if [ "${METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL}" != "" ]; then
             # Obtain the data to be imported
-            scp -i /vault/secrets/cert -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null noone@tue.blobfish.ghga-dev.de:/home/noone/data.zip /tmp/data.zip 1>/dev/null
+            scp -i /vault/secrets/cert -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null noone@tue.blobfish.ghga-dev.de:/home/noone/data.zip /tmp/data.zip 2>/dev/null
             # curl -Lo /tmp/data.zip "${METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL}"
             mkdir /tmp/data /tmp/example_dir
             cd /tmp/data
