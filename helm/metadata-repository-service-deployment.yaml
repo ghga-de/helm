@@ -79,7 +79,7 @@ spec:
         - name: METADATA_REPOSITORY_SERVICE_HOST
           value: 0.0.0.0
         #image: ghga/metadata-repository-service:0.0.0-20-20fe457-main
-        image: ghga/metadata-repository-service:17-3264a9c-dev
+        image: ghga/metadata-repository-service:0.0.0-17-3264a9c-dev
         name: metadata-repository
         ports:
         - containerPort: 8080
