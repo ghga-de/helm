@@ -71,6 +71,12 @@ spec:
           value: /api/repository
 #        - name: METADATA_REPOSITORY_SERVICE_DATA_LOAD_URL
 #          value: http://193.196.29.176/data.zip
+# Fixing metadata repo issue
+        - name: METADATA_REPOSITORY_SERVICE_CORS_ALLOW_CREDENTIALS
+          value: true
+        - name: METADATA_REPOSITORY_SERVICE_CORS_ALLOWED_ORIGINS
+          value: ['*']
+# Fixing metadata repo issue
         - name: METADATA_REPOSITORY_SERVICE_DB_NAME
           value: metadata-db
         - name: METADATA_REPOSITORY_SERVICE_DB_URL
