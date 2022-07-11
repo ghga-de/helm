@@ -28,7 +28,7 @@ data:
 
         location  /catalog/api/search {
             rewrite /api/search/(.*) /$1  break;
-            proxy_pass         http://metadata-search.catalogue.svc.cluster.local:8080;
+            proxy_pass         http://metadata-search-svc.catalogue.svc.cluster.local:8080;
             proxy_redirect     off;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
