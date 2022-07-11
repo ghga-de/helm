@@ -26,25 +26,25 @@ data:
         }
 
 
- #       location  /catalog/api/search {
-#            rewrite /api/search/(.*) /$1  break;
- #           proxy_pass         http://metadata-search.catalogue.svc.cluster.local:8080;
- #           proxy_redirect     off;
- #           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#            proxy_set_header X-Forwarded-Proto $scheme;
- #           proxy_set_header Host $http_host;
- #           proxy_http_version 1.1;
- #       }
+        location  /catalog/api/search {
+            rewrite /api/search/(.*) /$1  break;
+            proxy_pass         http://metadata-search.catalogue.svc.cluster.local:8080;
+            proxy_redirect     off;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Host $http_host;
+            proxy_http_version 1.1;
+        }
         
-  #      location  /catalog/api/repository {
-  #          rewrite /api/repository/(.*) /$1  break;
-  #          proxy_pass         http://metadata-rep.catalogue.svc.cluster.local:8080;
-  #          proxy_redirect     off;
-  #          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
- #           proxy_set_header X-Forwarded-Proto $scheme;
-#            proxy_set_header Host $http_host;
-#            proxy_http_version 1.1;
-#        }
+        location  /catalog/api/repository {
+            rewrite /api/repository/(.*) /$1  break;
+            proxy_pass         http://metadata-rep.catalogue.svc.cluster.local:8080;
+            proxy_redirect     off;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Host $http_host;
+            proxy_http_version 1.1;
+        }
         
         location  /api/search {
             rewrite /api/search/(.*) /$1  break;
