@@ -26,7 +26,7 @@ data:
         }
 
 
-        location  catalog/api/search {
+        location  /catalog/api/search {
             rewrite /api/search/(.*) /$1  break;
             proxy_pass         http://metadata-search.catalogue.svc.cluster.local:8080;
             proxy_redirect     off;
@@ -36,7 +36,7 @@ data:
             proxy_http_version 1.1;
         }
         
-        location  catalog/api/repository {
+        location  /catalog/api/repository {
             rewrite /api/repository/(.*) /$1  break;
             proxy_pass         http://metadata-repository.catalogue.svc.cluster.local:8080;
             proxy_redirect     off;
