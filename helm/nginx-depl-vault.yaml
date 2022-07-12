@@ -43,6 +43,10 @@ spec:
       - name: configmap-volume
         configMap:
           name: nginxsecretconfigmap
+      volumes:
+      - name: configmap-volume-cat
+        configMap:
+          name: nginxsecretconfigmapcatalog
       serviceAccountName: nginx
       containers:
       - name: nginxhttps
@@ -53,6 +57,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/nginx/conf.d
           name: configmap-volume
+        - mountPath: /etc/nginx/conf.d
+          name: configmap-volume-cat
 ---
 apiVersion: v1
 kind: ServiceAccount
