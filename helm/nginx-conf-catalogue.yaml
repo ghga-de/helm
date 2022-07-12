@@ -34,7 +34,7 @@ data:
             proxy_set_header Host $http_host;
         }
 
-        listen [::]:8443 ssl ipv6only=on;
+        listen [::]:8443 ssl;
         listen 8443 ssl;
         ssl_certificate /vault/secrets/cert;
         ssl_certificate_key /vault/secrets/key;
@@ -64,8 +64,8 @@ data:
         }
 
 
-        listen 8080 default_server;
-        listen [::]:8080 default_server;
+        listen 8080;
+        listen [::]:8080;
 
         server_name hd-catalog.ghga-dev.de;
         return 404;
