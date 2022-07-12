@@ -44,9 +44,9 @@ spec:
         projected:
             sources:    
             - configMap:
-              name: nginxsecretconfigmap
+                name: nginxsecretconfigmap
             - configMap:
-              name: nginxsecretconfigmapcatalog
+                name: nginxsecretconfigmapcatalog
       serviceAccountName: nginx
       containers:
       - name: nginxhttps
