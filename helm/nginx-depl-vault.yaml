@@ -43,7 +43,6 @@ spec:
       - name: configmap-volume
         configMap:
           name: nginxsecretconfigmap
-      volumes:
       - name: configmap-volume-cat
         configMap:
           name: nginxsecretconfigmapcatalog
