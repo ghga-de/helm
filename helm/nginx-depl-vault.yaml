@@ -40,9 +40,9 @@ spec:
         version: 1-dev
     spec:
       volumes:
- #     - name: configmap-volume
- #       configMap:
- #         name: nginxsecretconfigmap
+      - name: configmap-volume
+        configMap:
+          name: nginxsecretconfigmap
       - name: configmap-volume-cat
         configMap:
           name: nginxsecretconfigmapcatalog
@@ -54,9 +54,11 @@ spec:
         - containerPort: 8443
         - containerPort: 8080
         volumeMounts:
-#        - mountPath: /etc/nginx/conf.d
-#          name: configmap-volume
         - mountPath: /etc/nginx/conf.d
+          subPath: hd-dev.ghga-dev.de.conf
+          name: configmap-volume
+        - mountPath: /etc/nginx/conf.d
+          subPath: hd-catalog.-ghga-dev.de.conf
           name: configmap-volume-cat
 ---
 apiVersion: v1
