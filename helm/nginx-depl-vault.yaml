@@ -41,11 +41,12 @@ spec:
     spec:
       volumes:
       - name: configmap-volume
-        configMap:
-          name: nginxsecretconfigmap
-      - name: configmap-volume-cat
-        configMap:
-          name: nginxsecretconfigmapcatalog
+        projected:
+            sources:    
+            - configMap:
+              name: nginxsecretconfigmap
+            - configMap:
+              name: nginxsecretconfigmapcatalog
       serviceAccountName: nginx
       containers:
       - name: nginxhttps
@@ -54,12 +55,8 @@ spec:
         - containerPort: 8443
         - containerPort: 8080
         volumeMounts:
-        - mountPath: /etc/nginx/conf.d/hd-dev.ghga-dev.de.conf
-          subPath: hd-dev.ghga-dev.de.conf
+        - mountPath: /etc/nginx/conf.d/
           name: configmap-volume
-        - mountPath: /etc/nginx/conf.d/hd-catalog.ghga-dev.de.conf
-          subPath: hd-catalog.ghga-dev.de.conf
-          name: configmap-volume-cat
 ---
 apiVersion: v1
 kind: ServiceAccount
