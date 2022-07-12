@@ -17,7 +17,7 @@ data:
             proxy_pass http://metadata-catalogue.catalogue.svc.cluster.local:8080;
         }
         location  /api/search {
-            rewrite /catalog/api/search/(.*) /$1  break;
+            rewrite /api/search/(.*) /$1  break;
             proxy_pass         http://metadata-search-svc.catalogue.svc.cluster.local:8080;
             proxy_redirect     off;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -26,7 +26,7 @@ data:
         }
         
         location  /api/repository {
-            rewrite /catalog/api/repository/(.*) /$1  break;
+            rewrite /api/repository/(.*) /$1  break;
             proxy_pass         http://metadata-rep.catalogue.svc.cluster.local:8080;
             proxy_redirect     off;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
