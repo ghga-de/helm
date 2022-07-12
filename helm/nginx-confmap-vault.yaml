@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   hd-dev-ghga-dev.de: |
     server {
-        server_name hd-dev.ghga-dev.de;
+        server_name hd-dev.ghga-dev.de.conf;
         
          auth_basic           "Please authenticate";
          auth_basic_user_file /vault/secrets/blob;
