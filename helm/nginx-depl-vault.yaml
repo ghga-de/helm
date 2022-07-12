@@ -58,7 +58,7 @@ spec:
           subPath: hd-dev.ghga-dev.de.conf
           name: configmap-volume
         - mountPath: /etc/nginx/conf.d
-          subPath: hd-catalog.-ghga-dev.de.conf
+          subPath: hd-catalog.ghga-dev.de.conf
           name: configmap-volume-cat
 ---
 apiVersion: v1
