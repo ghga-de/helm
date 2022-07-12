@@ -51,7 +51,7 @@ spec:
         - containerPort: 8443
         - containerPort: 8080
         volumeMounts:
-        - mountPath: /etc/nginx/sites-enabled
+        - mountPath: /etc/nginx/conf.d
           name: configmap-volume
 ---
 apiVersion: v1
