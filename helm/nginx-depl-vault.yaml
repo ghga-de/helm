@@ -54,10 +54,10 @@ spec:
         - containerPort: 8443
         - containerPort: 8080
         volumeMounts:
-        - mountPath: /etc/nginx/conf.d
+        - mountPath: /etc/nginx/conf.d/hd-dev.ghga-dev.de.conf
           subPath: hd-dev.ghga-dev.de.conf
           name: configmap-volume
-        - mountPath: /etc/nginx/conf.d
+        - mountPath: /etc/nginx/conf.d/hd-catalog.ghga-dev.de.conf
           subPath: hd-catalog.ghga-dev.de.conf
           name: configmap-volume-cat
 ---
