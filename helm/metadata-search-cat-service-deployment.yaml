@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metadata-search-cat
+  name: metadata-search-cat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metadata-search-cat
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: metadata-search-cat
+    spec:
+      containers:
+        - args:
+            - |2
+
+              # install additional deps as they are needed for the population script;
+              cd /service
+              pip install ".[all]"
+
+              # run the service:
+              metadata-search-service
+          command:
+            - bash
+            - -c
+          env:
+            - name: METADATA_SEARCH_SERVICE_API_ROOT_PATH
+              value: /api/search
+            - name: METADATA_SEARCH_SERVICE_CORS_ALLOWED_HEADERS
+              value: '["*"]'
+            - name: METADATA_SEARCH_SERVICE_CORS_ALLOWED_METHODS
+              value: '["*"]'
+            - name: METADATA_SEARCH_SERVICE_CORS_ALLOWED_ORIGINS
+              value: '["*"]'
+            - name: METADATA_SEARCH_SERVICE_CORS_ALLOW_CREDENTIALS
+              value: "true"
+            - name: METADATA_SEARCH_SERVICE_DB_NAME
+              value: metadata-catalogue
+            - name: METADATA_SEARCH_SERVICE_DB_URL
+              value: mongodb://mongodb.data-portal.svc.cluster.local:27017
+            - name: METADATA_SEARCH_SERVICE_HOST
+              value: 0.0.0.0
+            - name: METADATA_SEARCH_SERVICE_LOG_LEVEL
+              value: debug
+            - name: METADATA_SEARCH_SERVICE_PORT
+              value: "8080"
+          image: ghga/metadata-search-service:main
+          name: metadata-search-cat
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}
