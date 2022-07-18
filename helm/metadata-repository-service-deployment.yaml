@@ -79,7 +79,7 @@ spec:
          #value: mongodb://metadata-db
         - name: METADATA_REPOSITORY_SERVICE_HOST
           value: 0.0.0.0
-        image: ghga/metadata-repository-service:0.0.0-23-430729f-main
+        image: ghga/metadata-repository-service:0.0.0-24-a8b7a57-main
         name: metadata-repository
         ports:
         - containerPort: 8080
