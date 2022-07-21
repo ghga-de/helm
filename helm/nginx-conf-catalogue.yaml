@@ -1,8 +1,8 @@
 apiVersion: v1
 data:
-  hd-catalog.ghga-dev.de.conf: |
+  tue-catalog.ghga-dev.de.conf: |
     server {
-        server_name hd-catalog.ghga-dev.de;
+        server_name tue-catalog.ghga-dev.de;
         
          auth_basic           "Please authenticate";
          auth_basic_user_file /vault/secrets/blob;
@@ -59,7 +59,7 @@ data:
 
     }
     server {
-        if ($host = hd-catalog.ghga-dev.de) {
+        if ($host = tue-catalog.ghga-dev.de) {
             return 301 https://$host$request_uri;
         }
 
@@ -67,7 +67,7 @@ data:
         listen 8080;
         listen [::]:8080;
 
-        server_name hd-catalog.ghga-dev.de;
+        server_name tue-catalog.ghga-dev.de;
         return 404;
     }
    
