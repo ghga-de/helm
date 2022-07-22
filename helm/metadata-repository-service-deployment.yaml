@@ -59,7 +59,7 @@ spec:
           # Run the service
             metadata-repository-service
         command:
-        - bash
+        - ash
         - -c
         env:
         - name: METADATA_REPOSITORY_SERVICE_API_ROOT_PATH
